@@ -56,15 +56,15 @@ try:
 except:
     SERVER_PORT = 80
 
-PORT = environ.get('PORT', SERVER_PORT)
-Popen([f"gunicorn web.wserver:app --bind 0.0.0.0:{PORT}"], shell=True)
+Popen(f"gunicorn web.wserver:app --bind 0.0.0.0:{SERVER_PORT}", shell=True)
 srun(["qbittorrent-nox", "-d", "--profile=."])
 if not ospath.exists('.netrc'):
     srun(["touch", ".netrc"])
 srun(["cp", ".netrc", "/root/.netrc"])
 srun(["chmod", "600", ".netrc"])
 srun(["chmod", "+x", "aria.sh"])
-srun(["./aria.sh"], shell=True)
+srun("./aria.sh", shell=True)
+sleep(0.5)
 
 Interval = []
 DRIVES_NAMES = []
@@ -392,6 +392,25 @@ try:
 except:
     BUTTON_SIX_NAME = None
     BUTTON_SIX_URL = None
+    
+try:
+    START_BTN1_NAME = getConfig('START_BTN1_NAME')
+    START_BTN1_URL = getConfig('START_BTN1_URL')
+    if len(START_BTN1_NAME) == 0 or len(START_BTN1_URL) == 0:
+        raise KeyError
+except:
+    START_BTN1_NAME = 'Repo'
+    START_BTN1_URL = 'https://github.com/arshsisodiya/helios-mirror'
+    
+try:
+    START_BTN2_NAME = getConfig('START_BTN2_NAME')
+    START_BTN2_URL = getConfig('START_BTN2_URL')
+    if len(START_BTN2_NAME) == 0 or len(START_BTN2_URL) == 0:
+        raise KeyError
+except:
+    START_BTN2_NAME = 'Support Group'
+    START_BTN2_URL = 'https://t.me/mirrorsociety'
+    
 try:
     INCOMPLETE_TASK_NOTIFIER = getConfig('INCOMPLETE_TASK_NOTIFIER')
     INCOMPLETE_TASK_NOTIFIER = INCOMPLETE_TASK_NOTIFIER.lower() == 'true'
